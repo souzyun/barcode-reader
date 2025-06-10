@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <title>QRコード読み取り</title>
+  <script src="https://unpkg.com/html5-qrcode@2.3.8/html5-qrcode.min.js"></script>
+  <style>
+    body {
+      font-family: sans-serif;
+      text-align: center;
+      margin: 0;
+      padding: 0;
+      background-color: #f0f8ff;
+    }
+    #reader {
+      width: 100%;
+      max-width: 400px;
+      margin: 40px auto;
+    }
+    h1 {
+      margin-top: 20px;
+    }
+  </style>
+</head>
+<body>
+  <h1>QRコードを読み取ってください</h1>
+  <div id="reader"></div>
+
+  <script>
+    function onScanSuccess(decodedText, decodedResult) {
+      console.log(`QRコード読み取り成功: ${decodedText}`);
+      // 一度読み取ったら停止して移動
+      qrScanner.clear();
+      // 読み取った内容がURLかどうか判定して遷移
+      if (decodedText.startsWith('http://') || decodedText.startsWith('https://')) {
+        window.location.href = decodedText;
+      } else {
+        window.location.href = `view.html?id=${encodeURIComponent(decodedText)}`;
+      }
+    }
+
+    const qrScanner = new Html5Qrcode("reader");
+    Html5Qrcode.getCameras().then(cameras => {
+      if (cameras && cameras.length) {
+        qrScanner.start(
+          { facingMode: "environment" },  // 背面カメラ優先
+          {
+            fps: 10,
+            qrbox: { width: 250, height: 250 }
+          },
+          onScanSuccess
+        );
+      } else {
+        alert("カメラが見つかりませんでした");
+      }
+    }).catch(err => {
+      console.error("カメラ起動エラー:", err);
+      alert("カメラを起動できませんでした: " + err);
+    });
+  </script>
+</body>
+</html>
