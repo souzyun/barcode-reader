@@ -36,20 +36,16 @@
   <div class="hint">URLが読み取られた場合はそのまま遷移します</div>
   <input type="text" id="barcodeInput" placeholder="バーコードをスキャン..." autofocus>
 
-  <script>
-    const input = document.getElementById('barcodeInput');
-    input.focus();
+  let id = params.get('id');
 
-    input.addEventListener('keydown', function(event) {
-      if (event.key === 'Enter') {
-        const value = input.value.trim();
-        if (value !== '') {
-          if (value.startsWith('http://') || value.startsWith('https://')) {
-            window.location.href = value;
-          } else {
-            window.location.href = `view.html?id=${encodeURIComponent(value)}`;
-          }
-        }
+// もしid自体が "https://..." のようなURLだった場合は、その中の ?id=xxx を探す
+if (id && id.startsWith('http')) {
+  const embeddedParams = new URLSearchParams(new URL(id).search);
+  const extractedId = embeddedParams.get('id');
+  if (extractedId) {
+    id = extractedId;
+  }
+}
       }
     });
   </script>
