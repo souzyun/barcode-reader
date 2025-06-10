@@ -43,7 +43,7 @@
     Html5Qrcode.getCameras().then(cameras => {
       if (cameras && cameras.length) {
         qrScanner.start(
-          { facingMode: "environment" },  // 背面カメラ優先
+          { facingMode: "user" },  // 背面カメラ優先
           {
             fps: 10,
             qrbox: { width: 250, height: 250 }
