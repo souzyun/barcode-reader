@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <title>QRコード読み取り（カメラ選択可）</title>
+  <script src="https://unpkg.com/html5-qrcode@2.3.8/html5-qrcode.min.js"></script>
+  <style>
+    body {
+      font-family: sans-serif;
+      background-color: #f0f8ff;
+      text-align: center;
+      margin: 0;
+      padding: 0;
+    }
+    #reader {
+      width: 100%;
+      max-width: 400px;
+      margin: 20px auto;
+    }
+    #camera-select {
+      font-size: 1em;
+      padding: 8px;
+      margin-top: 10px;
+    }
+  </style>
+</head>
+<body>
+  <h1>QRコードを読み取ってください</h1>
+  <select id="camera-select"></select>
+  <div id="reader"></div>
+
+  <script>
+    let qrScanner;
+    let currentCameraId = null;
+
+    function startScanner(cameraId) {
+      if (qrScanner) {
+        qrScanner.clear().then(() => {
+          qrScanner.start(
+            cameraId,
+            { fps: 10, qrbox: { width: 250, height: 250 } },
+            onScanSuccess
+          );
+        });
+      } else {
+        qrScanner = new Html5Qrcode("reader");
+        qrScanner.start(
+          cameraId,
+          { fps: 10, qrbox: { width: 250, height: 250 } },
+          onScanSuccess
+        );
+      }
+    }
+
+    function onScanSuccess(decodedText, decodedResult) {
+      console.log(`QRコード読み取り成功: ${decodedText}`);
+      qrScanner.clear();
+      if (decodedText.startsWith('http://') || decodedText.startsWith('https://')) {
+        window.location.href = decodedText;
+      } else {
+        window.location.href = `view.html?id=${encodeURIComponent(decodedText)}`;
+      }
+    }
+
+    Html5Qrcode.getCameras().then(devices => {
+      const select = document.getElementById('camera-select');
+      devices.forEach((device, index) => {
+        const option = document.createElement('option');
+        option.value = device.id;
+        option.text = device.label || `カメラ ${index + 1}`;
+        select.appendChild(option);
+      });
+
+      if (devices.length > 0) {
+        currentCameraId = devices[0].id;
+        startScanner(currentCameraId);
+      }
+
+      select.addEventListener('change', () => {
+        const selectedId = select.value;
+        if (selectedId !== currentCameraId) {
+          currentCameraId = selectedId;
+          startScanner(currentCameraId);
+        }
+      });
+    }).catch(err => {
+      console.error("カメラ取得エラー:", err);
+      alert("カメラを検出できませんでした: " + err);
+    });
+  </script>
+</body>
+</html>
