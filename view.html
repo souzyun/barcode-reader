@@ -1,37 +1,47 @@
+
 <!DOCTYPE html>
 <html lang="ja">
 <head>
-  <meta charset="UTF-8">
+  <meta charset="UTF-8" />
   <title>入場確認</title>
-  <script src="data/map.js"></script>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <style>
-    body { font-family: sans-serif; text-align: center; }
-    img { width: 300px; margin-top: 20px; }
+    body { text-align: center; font-size: 1.5rem; padding-top: 50px; }
+    img { max-width: 90%%; height: auto; margin: 20px 0; }
   </style>
+  <script src="data/map.js"></script>
 </head>
 <body>
-  <h1 id="message">読み込み中...</h1>
-  <img id="image" src="" alt="画像" />
-  <audio id="audio" autoplay></audio>
+  <div id="message">読み取り中…</div>
+  <img id="image" src="" alt="" />
+  <audio id="sound" autoplay></audio>
 
   <script>
-    const urlParams = new URLSearchParams(window.location.search);
-    const id = urlParams.get("id");
-    const from = urlParams.get("from");
+    function getQueryParam(param) {
+      const urlParams = new URLSearchParams(window.location.search);
+      return urlParams.get(param);
+    }
 
-    const name = ID_NAME_MAP[id];
-    if (name) {{
-      const msg = `${{name}}さん　${{from}} へのにゅうじょうかくにんしました。`;
-      document.getElementById("message").textContent = msg;
-      document.getElementById("image").src = `data/${{id}}.jpg`;
-      document.getElementById("audio").src = `audio/${{from}}.mp3`;
-    }} else {{
-      document.getElementById("message").textContent = "データが見つかりません";
-    }}
+    const id = getQueryParam("id");
+    const scanner = getQueryParam("scanner");
 
-    setTimeout(() => {{
-      if (from) window.location.href = `${{from}}.html`;
-    }}, 5000);
+    const name = nameMap[id] || "データが見つかりません";
+    const message = name + "　" + scanner + " へのにゅうじょうかくにんしました。";
+    const imagePath = "data/" + id + ".jpg";
+    const audioPath = "audio/" + scanner + ".mp3";
+
+    document.getElementById("message").textContent = message;
+    document.getElementById("image").src = imagePath;
+    document.getElementById("sound").src = audioPath;
+
+    // 5秒後に元のscannerページへ戻る
+    setTimeout(() => {
+      if (scanner) {
+        window.location.href = scanner + ".html";
+      } else {
+        window.location.href = "scanner1.html";
+      }
+    }, 5000);
   </script>
 </body>
 </html>
