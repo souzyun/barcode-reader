@@ -35,6 +35,13 @@
       const id = params.get("id");
       const name = names[id] || "不明なID";
       document.getElementById("msg").textContent = `${name}、${group}への入場を確認しました。`;
+
+      const image = document.getElementById("person-image");
+      if (id && /^[0-9]{3}$/.test(id)) {
+        image.src = `../images/${id}.png`;
+        image.alt = name;
+      }
+
       setTimeout(() => {
         window.location.href = "scanner.html";
       }, 5000);
@@ -43,5 +50,6 @@
 </head>
 <body>
   <h2 id="msg">読み込み中...</h2>
+  <img id="person-image" src="" alt="画像" style="max-width:100%; height:auto;">
 </body>
 </html>
