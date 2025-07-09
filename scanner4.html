@@ -1,34 +1,43 @@
-
 <!DOCTYPE html>
 <html lang="ja">
 <head>
-  <meta charset="UTF-8" />
-  <title>QRコード読み取り</title>
+  <meta charset="UTF-8">
+  <title>QRコード読み取り - うさぎぐみ</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <script src="https://unpkg.com/html5-qrcode" type="text/javascript"></script>
   <style>
-    body {{ text-align: center; font-family: sans-serif; }}
-    #reader {{ width: 90%%; margin: 0 auto; }}
+    body { text-align: center; font-family: sans-serif; }
+    #reader { width: 300px; margin: 30px auto; }
   </style>
 </head>
 <body>
-  <h2>QRコードを読み取ってください</h2>
+  <h2>QRコードを読み取ってください（うさぎぐみ）</h2>
   <div id="reader"></div>
 
   <script>
-    const scanner = "scanner4";
-    function onScanSuccess(decodedText, decodedResult) {{
-      window.location.href = "view.html?id=" + encodeURIComponent(decodedText) + "&scanner=" + scanner;
-    }}
+    function onScanSuccess(decodedText, decodedResult) {
+      window.location.href = `view.html?id=${encodeURIComponent(decodedText)}&scanner=scanner4`;
+    }
 
-    new Html5Qrcode("reader").start(
-      { facingMode: "user" },
-      {{
-        fps: 10,
-        qrbox: 250
-      }},
-      onScanSuccess
-    );
+    function onScanFailure(error) {
+      console.warn(`読み取り失敗: ${error}`);
+    }
+
+    const html5QrCode = new Html5Qrcode("reader");
+    Html5Qrcode.getCameras().then(cameras => {
+      if (cameras && cameras.length) {
+        html5QrCode.start(
+          { facingMode: "user" },
+          { fps: 10, qrbox: 250 },
+          onScanSuccess,
+          onScanFailure
+        );
+      } else {
+        alert("カメラが見つかりませんでした。");
+      }
+    }).catch(err => {
+      alert("カメラ初期化に失敗しました: " + err);
+    });
   </script>
 </body>
 </html>
