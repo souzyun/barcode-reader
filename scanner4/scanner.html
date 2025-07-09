@@ -6,44 +6,22 @@
   <style>
     body { font-family: sans-serif; text-align: center; padding: 2em; }
     video { width: 90%; height: auto; border: 2px solid #ccc; }
-    #camera-select { margin-top: 1em; }
+    #camera-select { display: none; }
     img { width: auto; height: auto; max-height: 200px; margin-top: 1em; }
   </style>
 </head>
 <body>
-  <h1>QRコード読み取り</h1>
+  <h1>QRコード読み取り（フロントカメラ固定）</h1>
   <video id="preview"></video>
-  <br>
-  <select id="camera-select"></select>
   <img src="../images/004.png" alt="クラス画像">
   <script src="https://unpkg.com/html5-qrcode"></script>
   <script>
     const scanner = new Html5Qrcode("preview");
-    const cameraSelect = document.getElementById("camera-select");
 
-    Html5Qrcode.getCameras().then(devices => {
-      devices.forEach((device, idx) => {
-        const option = document.createElement("option");
-        option.value = device.id;
-        option.text = device.label || `Camera ${idx+1}`;
-        cameraSelect.appendChild(option);
-      });
-      if (devices.length > 0) {
-        startScanner(devices[0].id);
-      }
-    });
-
-    cameraSelect.addEventListener("change", () => {
-      scanner.stop().then(() => {
-        startScanner(cameraSelect.value);
-      }).catch(err => console.error("Stop error:", err));
-    });
-
-    function startScanner(cameraId) {
+    function startScanner() {
       scanner.start(
-        {}, // use facingMode instead of deviceId
+        { facingMode: "user" },
         {
-          facingMode: "user",
           fps: 10,
           qrbox: 250
         },
@@ -58,8 +36,11 @@
         }
       ).catch(err => {
         console.error("Start error:", err);
+        alert("カメラの起動に失敗しました。設定を確認してください。");
       });
     }
+
+    startScanner();
   </script>
 </body>
 </html>
