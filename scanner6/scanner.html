@@ -7,7 +7,7 @@
     body { font-family: sans-serif; text-align: center; padding: 2em; }
     video { width: 90%; height: auto; border: 2px solid #ccc; }
     #camera-select { margin-top: 1em; }
-    img { width: 300px; margin-top: 1em; }
+    img { width: auto; height: auto; max-height: 200px; margin-top: 1em; }
   </style>
 </head>
 <body>
@@ -36,18 +36,28 @@
     cameraSelect.addEventListener("change", () => {
       scanner.stop().then(() => {
         startScanner(cameraSelect.value);
-      });
+      }).catch(err => console.error("Stop error:", err));
     });
 
     function startScanner(cameraId) {
-      scanner.start(cameraId, {
-        fps: 10,
-        qrbox: 250
-      }, qrCodeMessage => {
-        const group = "6";
-        const id = qrCodeMessage.replace(/[^0-9]/g, "").padStart(3, "0");
-        window.location.href = `view.html?id=${id}&group=${group}`;
-        scanner.stop();
+      scanner.start(
+        {}, // use facingMode instead of deviceId
+        {
+          facingMode: "user",
+          fps: 10,
+          qrbox: 250
+        },
+        qrCodeMessage => {
+          const group = "6";
+          const id = qrCodeMessage.replace(/[^0-9]/g, "").padStart(3, "0");
+          window.location.href = `view.html?id=${id}&group=${group}`;
+          scanner.stop();
+        },
+        errorMessage => {
+          console.warn("QR Code no match:", errorMessage);
+        }
+      ).catch(err => {
+        console.error("Start error:", err);
       });
     }
   </script>
