@@ -1,43 +1,27 @@
+
 <!DOCTYPE html>
 <html lang="ja">
 <head>
   <meta charset="UTF-8">
-  <title>QRコード読み取り - うさぎぐみ</title>
+  <title>アメリカパビリオン</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <script src="https://unpkg.com/html5-qrcode" type="text/javascript"></script>
   <style>
-    body { text-align: center; font-family: sans-serif; }
-    #reader { width: 300px; margin: 30px auto; }
+    body { text-align: center; font-family: sans-serif; padding: 1em; }
+    #reader { width: 300px; margin: 20px auto; }
+    .pavilion-image { max-width: 90%; height: auto; margin-bottom: 1em; }
   </style>
 </head>
 <body>
-  <h2>QRコードを読み取ってください（うさぎぐみ）</h2>
+  <h2>アメリカパビリオン</h2>
+  <img class="pavilion-image" src="004.png" alt="アメリカパビリオン">
   <div id="reader"></div>
-
   <script>
     function onScanSuccess(decodedText, decodedResult) {
-      window.location.href = `view.html?id=${encodeURIComponent(decodedText)}&scanner=scanner4`;
+      window.location.href = `view.html?id=${decodedText}&src=scanner4`;
     }
-
-    function onScanFailure(error) {
-      console.warn(`読み取り失敗: ${error}`);
-    }
-
-    const html5QrCode = new Html5Qrcode("reader");
-    Html5Qrcode.getCameras().then(cameras => {
-      if (cameras && cameras.length) {
-        html5QrCode.start(
-          { facingMode: "user" },
-          { fps: 10, qrbox: 250 },
-          onScanSuccess,
-          onScanFailure
-        );
-      } else {
-        alert("カメラが見つかりませんでした。");
-      }
-    }).catch(err => {
-      alert("カメラ初期化に失敗しました: " + err);
-    });
+    let html5QrcodeScanner = new Html5QrcodeScanner("reader", { fps: 10, qrbox: 250 });
+    html5QrcodeScanner.render(onScanSuccess);
   </script>
 </body>
 </html>
