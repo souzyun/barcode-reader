@@ -17,6 +17,15 @@
   <audio id="sound" autoplay></audio>
 
   <script>
+    const scannerDisplayMap = {
+      "scanner1": "ひよこぐみ",
+      "scanner2": "あひるぐみ",
+      "scanner3": "りすぐみ",
+      "scanner4": "うさぎぐみ",
+      "scanner5": "きりんぐみ",
+      "scanner6": "学童"
+    };
+
     function getQueryParam(param) {
       const urlParams = new URLSearchParams(window.location.search);
       return urlParams.get(param);
@@ -24,9 +33,10 @@
 
     const id = getQueryParam("id");
     const scanner = getQueryParam("scanner");
+    const displayScanner = scannerDisplayMap[scanner] || scanner;
 
     const name = nameMap[id] || "データが見つかりません";
-    const message = name + "　" + scanner + " へのにゅうじょうかくにんしました。";
+    const message = name + "　" + displayScanner + " へのにゅうじょうかくにんしました。";
     const imagePath = "data/" + id + ".jpg";
     const audioPath = "audio/" + scanner + ".mp3";
 
