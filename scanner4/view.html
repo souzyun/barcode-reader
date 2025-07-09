@@ -1,55 +1,82 @@
 <!DOCTYPE html>
-<html>
+<html lang="ja">
 <head>
-  <meta charset="utf-8">
+  <meta charset="UTF-8">
   <title>入場確認</title>
-  <script>
-    const names = {
-      "001": "あおき かなたさん",
-      "002": "おおいし りこさん",
-      "003": "おおみち いろさん",
-      "004": "おかもと さなさん",
-      "005": "かわはら じんさん",
-      "006": "くたに あすはさん",
-      "007": "さの おおきさん",
-      "008": "さわだ めいさん",
-      "009": "たかむら ゆうじんさん",
-      "010": "たにで ゆうしろうさん",
-      "011": "つばきの さなさん",
-      "012": "てらたに ここはさん",
-      "013": "とよた がくさん",
-      "014": "なかにし りおさん",
-      "015": "はせがわ なつめさん",
-      "016": "はるえ みゆさん",
-      "017": "はんい しほさん",
-      "018": "ふじおか そうしさん",
-      "019": "もり ほうすけさん",
-      "020": "やまね かんたさん",
-      "021": "やまもと だんさん",
-      "022": "わだ りおんさん"
-    };
-    const group = "アメリカパビリオン";
-
-    window.onload = () => {
-      const params = new URLSearchParams(location.search);
-      const id = params.get("id");
-      const name = names[id] || "不明なID";
-      document.getElementById("msg").textContent = `${name}、${group}への入場を確認しました。`;
-
-      const image = document.getElementById("person-image");
-      if (id && /^[0-9]{3}$/.test(id)) {
-        image.src = `../images/${id}.png`;
-        image.alt = name;
-      }
-
-      setTimeout(() => {
-        window.location.href = "scanner.html";
-      }, 5000);
-    };
-  </script>
+  <style>
+    body { font-family: sans-serif; text-align: center; padding: 2em; }
+    img { max-width: 80%; height: auto; margin-top: 1em; }
+  </style>
 </head>
 <body>
-  <h2 id="msg">読み込み中...</h2>
-  <img id="person-image" src="" alt="画像" style="max-width:100%; height:auto;">
+  <h1 id="message">読み込み中...</h1>
+  <img id="person-image" src="" alt="来場者画像">
+  <audio id="confirm-sound" autoplay></audio>
+
+  <script>
+    // IDと名前の対応表
+    const idToName = {
+      "001": "あおき　かなたさん",
+      "002": "おおいし　りこさん",
+      "003": "おおみち　いろさん",
+      "004": "おかもと　さなさん",
+      "005": "かわはら　じんさん",
+      "006": "くたに　あすはさん",
+      "007": "さの　おおきさん",
+      "008": "さわだ　めいさん",
+      "009": "たかむら　ゆうじんさん",
+      "010": "たにで　ゆうしろうさん",
+      "011": "つばきの　さなさん",
+      "012": "てらたに　ここはさん",
+      "013": "とよた　がくさん",
+      "014": "なかにし　りおさん",
+      "015": "はせがわ　なつめさん",
+      "016": "はるえ　みゆさん",
+      "017": "はんい　しほさん",
+      "018": "ふじおか　そうしさん",
+      "019": "もり　ほうすけさん",
+      "020": "やまね　かんたさん",
+      "021": "やまもと　だんさん",
+      "022": "わだ　りおんさん"
+    };
+
+    // URLからID取得（?id= または #id）
+    const params = new URLSearchParams(window.location.search);
+    let id = params.get("id");
+    if (!id && window.location.hash) {
+      id = window.location.hash.replace(/^#/, "");
+    }
+
+    const name = idToName[id];
+    const scannerLabel = window.location.pathname.match(/scanner(\d)/);
+    const groupMap = {
+      "1": "イタリアパビリオン",
+      "2": "チリパビリオン",
+      "3": "ドイツパビリオン",
+      "4": "アメリカパビリオン",
+      "5": "ちゅうごくパビリオン",
+      "6": "スペインパビリオン"
+    };
+    const group = scannerLabel ? groupMap[scannerLabel[1]] : "不明なパビリオン";
+
+    if (name) {
+      document.getElementById("message").textContent = `${name}　${group}へのにゅうじょうをかくにんしました。`;
+      document.getElementById("person-image").src = `../images/${id}.png`;
+    } else {
+      document.getElementById("message").textContent = "不明なIDです。";
+    }
+
+    const sound = document.getElementById("confirm-sound");
+    sound.src = `../sounds/confirm${scannerLabel ? scannerLabel[1] : "1"}.mp3`;
+
+    // 5秒後にスキャナー画面に戻る
+    setTimeout(() => {
+      if (scannerLabel) {
+        window.location.href = `scanner${scannerLabel[1]}/scanner.html`;
+      } else {
+        window.location.href = "scanner1/scanner.html";
+      }
+    }, 5000);
+  </script>
 </body>
 </html>
