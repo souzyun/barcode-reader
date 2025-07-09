@@ -11,32 +11,41 @@
   </style>
 </head>
 <body>
-  <h1>QRコード読み取り（フロントカメラ固定）</h1>
+  <h1>QRコード読み取り</h1>
   <video id="preview"></video>
-  <img src="../scanner1/camera_image.png" alt="クラス画像">
+  <img src="../images/001.png" alt="クラス画像">
   <script src="https://unpkg.com/html5-qrcode"></script>
   <script>
     const scanner = new Html5Qrcode("preview");
 
     function startScanner() {
-      scanner.start(
-        { facingMode: "user" },
-        {
-          fps: 10,
-          qrbox: 250
-        },
-        qrCodeMessage => {
-          const group = "1";
-          const id = qrCodeMessage.replace(/[^0-9]/g, "").padStart(3, "0");
-          window.location.href = `view.html?id=${id}&group=${group}`;
-          scanner.stop();
-        },
-        errorMessage => {
-          console.warn("QR Code no match:", errorMessage);
+      Html5Qrcode.getCameras().then(devices => {
+        if (devices && devices.length) {
+          scanner.start(
+            devices[0].id,
+            {
+              fps: 10,
+              qrbox: 250
+            },
+            qrCodeMessage => {
+              const group = "1";
+              const id = qrCodeMessage.replace(/[^0-9]/g, "").padStart(3, "0");
+              window.location.href = `view.html?id=${id}&group=${group}`;
+              scanner.stop();
+            },
+            errorMessage => {
+              console.warn("読み取り失敗:", errorMessage);
+            }
+          ).catch(err => {
+            console.error("開始時のエラー:", err);
+            alert("カメラが起動できません。設定を確認してください。");
+          });
+        } else {
+          alert("カメラが見つかりません。");
         }
-      ).catch(err => {
-        console.error("Start error:", err);
-        alert("カメラの起動に失敗しました。設定を確認してください。");
+      }).catch(err => {
+        console.error("カメラ取得失敗:", err);
+        alert("カメラの使用が許可されていないか、デバイスが非対応です。");
       });
     }
 
