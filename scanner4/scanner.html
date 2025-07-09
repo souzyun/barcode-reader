@@ -1,35 +1,55 @@
-
 <!DOCTYPE html>
 <html lang="ja">
 <head>
   <meta charset="UTF-8">
-  <title>QRコード読み取り</title>
-  <script src="https://unpkg.com/html5-qrcode"></script>
+  <title>QRコードスキャナー</title>
   <style>
-    body { font-family: sans-serif; text-align: center; }
-    #reader { width: 90%%; margin: auto; }
+    body { font-family: sans-serif; text-align: center; padding: 2em; }
+    video { width: 90%; height: auto; border: 2px solid #ccc; }
+    #camera-select { margin-top: 1em; }
+    img { width: 300px; margin-top: 1em; }
   </style>
 </head>
 <body>
-  <h1>QRコードを読み取ってください</h1>
-  <div id="reader"></div>
-
+  <h1>QRコード読み取り</h1>
+  <video id="preview"></video>
+  <br>
+  <select id="camera-select"></select>
+  <img src="../images/004.png" alt="クラス画像">
+  <script src="https://unpkg.com/html5-qrcode"></script>
   <script>
-    const scannerId = window.location.pathname.match(/scanner(\d)/)[1];
-    function onScanSuccess(decodedText) {
-      window.location.href = `view.html?id=${decodedText}&group=${scannerId}`;
-    }
+    const scanner = new Html5Qrcode("preview");
+    const cameraSelect = document.getElementById("camera-select");
 
-    const html5QrCode = new Html5Qrcode("reader");
-    Html5Qrcode.getCameras().then(cameras => {
-      if (cameras && cameras.length) {
-        html5QrCode.start(
-          cameras[0].id,
-          { fps: 10, qrbox: 250 },
-          onScanSuccess
-        );
+    Html5Qrcode.getCameras().then(devices => {
+      devices.forEach((device, idx) => {
+        const option = document.createElement("option");
+        option.value = device.id;
+        option.text = device.label || `Camera ${idx+1}`;
+        cameraSelect.appendChild(option);
+      });
+      if (devices.length > 0) {
+        startScanner(devices[0].id);
       }
     });
+
+    cameraSelect.addEventListener("change", () => {
+      scanner.stop().then(() => {
+        startScanner(cameraSelect.value);
+      });
+    });
+
+    function startScanner(cameraId) {
+      scanner.start(cameraId, {
+        fps: 10,
+        qrbox: 250
+      }, qrCodeMessage => {
+        const group = "4";
+        const id = qrCodeMessage.replace(/[^0-9]/g, "").padStart(3, "0");
+        window.location.href = `view.html?id=${id}&group=${group}`;
+        scanner.stop();
+      });
+    }
   </script>
 </body>
 </html>

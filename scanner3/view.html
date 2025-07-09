@@ -4,39 +4,46 @@
   <meta charset="UTF-8">
   <title>入場確認</title>
   <style>
-    body { font-family: sans-serif; text-align: center; padding: 2em; }
-    img { max-width: 80%%; height: auto; margin-top: 1em; }
+    body {{ font-family: sans-serif; text-align: center; padding: 2em; }}
+    img {{ max-width: 80%; height: auto; margin-top: 1em; }}
   </style>
 </head>
 <body>
   <h1 id="message">読み込み中...</h1>
   <img id="person-image" src="" alt="来場者画像">
   <audio id="confirm-sound" autoplay></audio>
-
   <script>
-    const idToName = {'001': 'あおき\u3000かなたさん', '002': 'おおいし\u3000りこさん', '003': 'おおみち\u3000いろさん', '004': 'おかもと\u3000さなさん', '005': 'かわはら\u3000じんさん', '006': 'くたに\u3000あすはさん', '007': 'さの\u3000おおきさん', '008': 'さわだ\u3000めいさん', '009': 'たかむら\u3000ゆうじんさん', '010': 'たにで\u3000ゆうしろうさん', '011': 'つばきの\u3000さなさん', '012': 'てらたに\u3000ここはさん', '013': 'とよた\u3000がくさん', '014': 'なかにし\u3000りおさん', '015': 'はせがわ\u3000なつめさん', '016': 'はるえ\u3000みゆさん', '017': 'はんい\u3000しほさん', '018': 'ふじおか\u3000そうしさん', '019': 'もり\u3000ほうすけさん', '020': 'やまね\u3000かんたさん', '021': 'やまもと\u3000だんさん', '022': 'わだ\u3000りおんさん'};
-
+    const idToName = {{
+      "001": "あおき　かなたさん", "002": "おおいし　りこさん", "003": "おおみち　いろさん",
+      "004": "おかもと　さなさん", "005": "かわはら　じんさん", "006": "くたに　あすはさん",
+      "007": "さの　おおきさん", "008": "さわだ　めいさん", "009": "たかむら　ゆうじんさん",
+      "010": "たにで　ゆうしろうさん", "011": "つばきの　さなさん", "012": "てらたに　ここはさん",
+      "013": "とよた　がくさん", "014": "なかにし　りおさん", "015": "はせがわ　なつめさん",
+      "016": "はるえ　みゆさん", "017": "はんい　しほさん", "018": "ふじおか　そうしさん",
+      "019": "もり　ほうすけさん", "020": "やまね　かんたさん", "021": "やまもと　だんさん",
+      "022": "わだ　りおんさん"
+    }};
+    const groupMap = {{
+      "1": "イタリアパビリオン", "2": "チリパビリオン", "3": "ドイツパビリオン",
+      "4": "アメリカパビリオン", "5": "ちゅうごくパビリオン", "6": "スペインパビリオン"
+    }};
     const params = new URLSearchParams(window.location.search);
     const id = params.get("id");
     const groupId = params.get("group") || "1";
-
-    const groupMap = {'1': 'イタリアパビリオン', '2': 'チリパビリオン', '3': 'ドイツパビリオン', '4': 'アメリカパビリオン', '5': 'ちゅうごくパビリオン', '6': 'スペインパビリオン'};
+    const name = idToName[id];
     const group = groupMap[groupId] || "不明なパビリオン";
 
-    const name = idToName[id];
-    if (name) {
-      document.getElementById("message").textContent = `${name}　${group}へのにゅうじょうをかくにんしました。`;
-      document.getElementById("person-image").src = `../images/${id}.png`;
-    } else {
+    if (name) {{
+      document.getElementById("message").textContent = `${{name}}　${{group}}へのにゅうじょうをかくにんしました。`;
+      document.getElementById("person-image").src = `../images/${{id}}.png`;
+    }} else {{
       document.getElementById("message").textContent = "不明なIDです。";
-    }
-
+    }}
     const sound = document.getElementById("confirm-sound");
-    sound.src = `../sounds/confirm${groupId}.mp3`;
-
-    setTimeout(() => {
-      window.location.href = `scanner${groupId}/scanner.html`;
-    }, 5000);
+    sound.src = `../sounds/confirm${{groupId}}.mp3`;
+    setTimeout(() => {{
+      window.location.href = "scanner.html";
+    }}, 5000);
   </script>
 </body>
 </html>
