@@ -7,16 +7,19 @@
     import QrScanner from "https://unpkg.com/qr-scanner@1.4.2/qr-scanner.min.js";
     window.addEventListener('DOMContentLoaded', () => {
       const video = document.getElementById('qr-video');
-      const scanner = new QrScanner(video, result => {
-        window.location.href = `view.html?id=${result}`;
+      QrScanner.listCameras(true).then(cameras => {
+        const frontCamera = cameras.find(cam => /front/i.test(cam.label));
+        const scanner = new QrScanner(video, result => {
+          window.location.href = `view.html?id=${result}`;
+        }, frontCamera ? { deviceId: frontCamera.id } : undefined);
+        scanner.start();
       });
-      scanner.start();
     });
   </script>
 </head>
 <body>
   <h2>カメラで読み取ってください</h2>
-  <img src="camera_image.png" alt="パビリオン画像" width="200">
+  <img src="camera_image.png" alt="パビリオン画像" style="width:auto; max-width:100%; height:auto;">
   <video id="qr-video" style="width: 100%; max-width: 400px;"></video>
 </body>
 </html>
