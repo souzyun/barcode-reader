@@ -32,8 +32,9 @@
     }
 
     const id = getQueryParam("id");
-    const scanner = getQueryParam("scanner");
-    const displayScanner = scannerDisplayMap[scanner] || scanner;
+    const rawScanner = getQueryParam("scanner");
+    const scanner = rawScanner || "scanner1";  // デフォルト fallback
+    const displayScanner = scannerDisplayMap[scanner] || "不明なクラス";
 
     const name = nameMap[id] || "データが見つかりません";
     const message = name + "　" + displayScanner + " へのにゅうじょうかくにんしました。";
@@ -45,11 +46,7 @@
     document.getElementById("sound").src = audioPath;
 
     setTimeout(() => {
-      if (scanner) {
-        window.location.href = scanner + ".html";
-      } else {
-        window.location.href = "scanner1.html";
-      }
+      window.location.href = scanner + ".html";
     }, 5000);
   </script>
 </body>
