@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <title>QRスキャン - scanner4</title>
+  <script src="https://unpkg.com/html5-qrcode@2.3.8/html5-qrcode.min.js"></script>
+  <style>
+    body { font-family: sans-serif; text-align: center; }
+    #reader { width: 300px; margin: 20px auto; }
+  </style>
+</head>
+<body>
+  <h1>scanner4 - QRコードを読み取ってください</h1>
+  <div id="reader"></div>
+
+  <script>
+    const scannerName = "scanner4";
+    const qrScanner = new Html5Qrcode("reader");
+
+    Html5Qrcode.getCameras().then(devices => {
+      if (devices && devices.length) {
+        const cameraId = devices[0].id;
+        qrScanner.start(cameraId, { fps: 10, qrbox: 250 },
+          (decodedText) => {
+            qrScanner.stop().then(() => {
+              window.location.href = `view.html?id=${decodedText}&from=${scannerName}`;
+            });
+          }
+        );
+      }
+    });
+  </script>
+</body>
+</html>
