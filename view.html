@@ -33,7 +33,7 @@
 
     const id = getQueryParam("id");
     const rawScanner = getQueryParam("scanner");
-    const scanner = rawScanner || "scanner1";  // デフォルト fallback
+    const scanner = rawScanner || "scanner1";
     const displayScanner = scannerDisplayMap[scanner] || "不明なクラス";
 
     const name = nameMap[id] || "データが見つかりません";

@@ -5,23 +5,30 @@
   <meta charset="UTF-8" />
   <title>QRコード読み取り</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <script src="https://unpkg.com/html5-qrcode" type="text/javascript"></script>
   <style>
-    body {{ text-align: center; padding: 40px; }}
-    input {{ font-size: 1.2rem; width: 80%%; padding: 10px; }}
+    body {{ text-align: center; font-family: sans-serif; }}
+    #reader {{ width: 90%%; margin: 0 auto; }}
   </style>
 </head>
 <body>
-  <h1>QRコードを読み取ってください</h1>
-  <input type="text" id="codeInput" placeholder="ここにQRコードが入力されます" autofocus />
+  <h2>QRコードを読み取ってください</h2>
+  <div id="reader"></div>
 
   <script>
     const scanner = "scanner3";
-    document.getElementById("codeInput").addEventListener("change", function(e) {
-      const id = e.target.value.trim();
-      if (id) {
-        window.location.href = "view.html?id=" + encodeURIComponent(id) + "&scanner=" + encodeURIComponent(scanner);
-      }
-    });
+    function onScanSuccess(decodedText, decodedResult) {{
+      window.location.href = "view.html?id=" + encodeURIComponent(decodedText) + "&scanner=" + scanner;
+    }}
+
+    new Html5Qrcode("reader").start(
+      { facingMode: "user" },
+      {{
+        fps: 10,
+        qrbox: 250
+      }},
+      onScanSuccess
+    );
   </script>
 </body>
 </html>
