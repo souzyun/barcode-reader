@@ -1,1 +1,32 @@
-<!-- scanner2.html -->
+
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<title>QRスキャナー scanner2</title>
+</head>
+<body>
+<h1>チリパビリオン</h1>
+<video id="video" autoplay muted playsinline style="width: 100%; max-width: 600px;"></video>
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+  const scanner = "scanner2";
+  const video = document.getElementById("video");
+
+  navigator.mediaDevices.getUserMedia({ video: { facingMode: "user" } })
+    .then(stream => {
+      video.srcObject = stream;
+    })
+    .catch(err => {
+      console.error("カメラが使用できません:", err);
+    });
+
+  const dummyQR = "001";  // QRがスキャンされたと仮定
+  setTimeout(() => {
+    window.location.href = `view.html?id=${dummyQR}&scanner=${scanner}`;
+  }, 3000);  // デモ用に3秒後に遷移
+});
+</script>
+<img src="images/002.png" style="width: 100%; margin-top: 20px;" />
+</body>
+</html>

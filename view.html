@@ -1,1 +1,90 @@
-<!-- view.html -->
+
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <title>入場確認</title>
+  <style>
+    body {{
+      text-align: center;
+      font-family: sans-serif;
+      background-color: #f0f0f0;
+    }}
+    .container {{
+      margin-top: 50px;
+    }}
+    img {{
+      max-width: 80%;
+      height: auto;
+    }}
+    .message {{
+      font-size: 2em;
+      margin: 20px;
+    }}
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="message" id="message">読み込み中...</div>
+    <img id="image" src="" alt="画像が見つかりません">
+  </div>
+  <audio id="audio" autoplay></audio>
+  <script>
+    const urlParams = new URLSearchParams(window.location.search);
+    const id = urlParams.get('id');
+    const scanner = urlParams.get('scanner');
+
+    const names = {{
+      '001': 'あおき　かなたさん',
+      '002': 'おおいし　りこさん',
+      '003': 'おおみち　いろさん',
+      '004': 'おかもと　さなさん',
+      '005': 'かわはら　じんさん',
+      '006': 'くたに　あすはさん',
+      '007': 'さの　おおきさん',
+      '008': 'さわだ　めいさん',
+      '009': 'たかむら　ゆうじんさん',
+      '010': 'たにで　ゆうしろうさん',
+      '011': 'つばきの　さなさん',
+      '012': 'てらたに　ここはさん',
+      '013': 'とよた　がくさん',
+      '014': 'なかにし　りおさん',
+      '015': 'はせがわ　なつめさん',
+      '016': 'はるえ　みゆさん',
+      '017': 'はんい　しほさん',
+      '018': 'ふじおか　そうしさん',
+      '019': 'もり　ほうすけさん',
+      '020': 'やまね　かんたさん',
+      '021': 'やまもと　だんさん',
+      '022': 'わだ　りおんさん'
+    }};
+
+    const scannerNames = {{
+      '1': 'イタリアパビリオン',
+      '2': 'チリパビリオン',
+      '3': 'ドイツパビリオン',
+      '4': 'アメリカパビリオン',
+      '5': 'ちゅうごくパビリオン',
+      '6': 'スペインパビリオン'
+    }};
+
+    const name = names[id];
+    const location = scannerNames[scanner];
+
+    if (name && location) {{
+      document.getElementById("message").innerText = `${{name}}　${{location}}へのにゅうじょうをかくにんしました。`;
+      document.getElementById("image").src = `images/${{id}}.png`;
+    }} else {{
+      document.getElementById("message").innerText = "不明なIDまたは場所です";
+    }}
+
+    const audio = document.getElementById("audio");
+    audio.src = `audio/${{scanner}}.mp3`;
+    audio.play();
+
+    setTimeout(() => {{
+      window.location.href = `scanner${{scanner}}.html`;
+    }}, 5000);
+  </script>
+</body>
+</html>
