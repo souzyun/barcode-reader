@@ -1,32 +1,28 @@
-
 <!DOCTYPE html>
 <html lang="ja">
 <head>
-<meta charset="UTF-8">
-<title>QRスキャナー scanner6</title>
+  <meta charset="UTF-8" />
+  <title>スペインパビリオン</title>
+  <script src="https://unpkg.com/html5-qrcode" type="text/javascript"></script>
+  <script src="js/script.js"></script>
+  <style>
+    body { font-family: sans-serif; text-align: center; }
+    .container { display: flex; justify-content: center; align-items: center; gap: 20px; }
+    #reader { width: 300px; }
+    img { height: 100px; }
+  </style>
 </head>
 <body>
-<h1>スペインパビリオン</h1>
-<video id="video" autoplay muted playsinline style="width: 100%; max-width: 600px;"></video>
-<script>
-document.addEventListener("DOMContentLoaded", () => {
-  const scanner = "scanner6";
-  const video = document.getElementById("video");
+  <h1>スペインパビリオンへようこそ！</h1>
+  <div class="container">
+    <div id="reader"></div>
+    <img src="images/flags/spain.png" alt="スペイン国旗">
+  </div>
 
-  navigator.mediaDevices.getUserMedia({ video: { facingMode: "user" } })
-    .then(stream => {
-      video.srcObject = stream;
-    })
-    .catch(err => {
-      console.error("カメラが使用できません:", err);
-    });
-
-  const dummyQR = "001";  // QRがスキャンされたと仮定
-  setTimeout(() => {
-    window.location.href = `view.html?id=${dummyQR}&scanner=${scanner}`;
-  }, 3000);  // デモ用に3秒後に遷移
-});
-</script>
-<img src="images/006.png" style="width: 100%; margin-top: 20px;" />
+  <script>
+    const pavilion = 'スペイン';
+    const scannerPage = 'scanner6.html';
+    startQrScanner(pavilion, scannerPage);
+  </script>
 </body>
 </html>
