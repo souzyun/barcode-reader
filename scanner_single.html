@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8" />
+  <title>イタリアパビリオン</title>
+  <script src="https://unpkg.com/html5-qrcode" type="text/javascript"></script>
+  <script src="data/names.js"></script>
+  <style>
+    body { font-family: sans-serif; text-align: center; }
+    .container { display: flex; justify-content: center; align-items: center; gap: 20px; margin-top: 20px; }
+    #reader { width: 300px; }
+    img { height: 100px; }
+    #result { margin-top: 20px; font-size: 1.2em; }
+  </style>
+</head>
+<body>
+  <h1>イタリアパビリオンへようこそ！</h1>
+  <div class="container">
+    <div id="reader"></div>
+    <img src="images/flags/italy.png" alt="イタリア国旗">
+  </div>
+
+  <div id="result"></div>
+  <img id="entryImage" src="" alt="" style="height:200px; display:none;">
+
+  <script>
+    let qrScanner;
+    let entryAudio;
+
+    function startQrScanner() {
+      entryAudio = new Audio(`sounds/scanner1.mp3`);
+      entryAudio.preload = "auto";
+
+      qrScanner = new Html5Qrcode("reader", { facingMode: "user" });
+      qrScanner.start(
+        { facingMode: "user" },
+        { fps: 10, qrbox: 250 },
+        (decodedText) => {
+          handleResult(decodedText);
+        },
+        (error) => {}
+      );
+    }
+
+    function handleResult(decodedText) {
+      qrScanner.pause();
+
+      const name = nameMap[decodedText] || "不明な方";
+      document.getElementById("result").textContent = `${name}さん、イタリアパビリオンへのにゅうじょうをかくにんしました。`;
+      document.getElementById("entryImage").src = `images/entries/${decodedText}.png`;
+      document.getElementById("entryImage").style.display = "block";
+
+      entryAudio.play().catch(err => console.log("音再生エラー", err));
+
+      setTimeout(() => {
+        document.getElementById("result").textContent = "";
+        document.getElementById("entryImage").style.display = "none";
+        qrScanner.resume();
+      }, 5000);
+    }
+
+    window.onload = startQrScanner;
+  </script>
+</body>
+</html>
