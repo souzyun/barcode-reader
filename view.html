@@ -15,6 +15,16 @@
       document.getElementById("message").textContent = `${name}さん、${pavilion}パビリオンへのにゅうじょうをかくにんしました。`;
       document.getElementById("image").src = `images/entries/${id}.png`;
 
+      const pageNum = from.match(/scanner(\d)/)?.[1] || '1';
+      const audio = new Audio(`sounds/scanner${pageNum}.mp3`);
+      audio.preload = "auto";
+
+      setTimeout(() => {
+        audio.play().catch((error) => {
+          console.log("音声再生エラー", error);
+        });
+      }, 300);
+
       setTimeout(() => {
         location.href = from;
       }, 5000);
