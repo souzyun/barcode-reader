@@ -16,7 +16,7 @@
       document.getElementById("image").src = `images/entries/${id}.png`;
 
       const pageNum = from.match(/scanner(\d)/)?.[1] || '1';
-      const audio = new Audio(`sounds/scanner${pageNum}.mp3`);
+      const audio = new Audio(`sounds/scanner1.mp3`);
       audio.preload = "auto";
 
       setTimeout(() => {
