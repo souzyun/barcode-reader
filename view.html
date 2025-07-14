@@ -3,27 +3,32 @@
 <head>
   <meta charset="UTF-8" />
   <title>入場確認</title>
-  <script src="data/names.js"></script>
-  <script>
-    window.onload = function () {
-      const params = new URLSearchParams(location.search);
-      const id = params.get('id');
-      const pavilion = params.get('pavilion');
-      const from = params.get('from');
-      const name = nameMap[id] || "不明な方";
+ <script src="data/names.js"></script>
+<script>
+  let audio;
+  window.onload = function () {
+    const params = new URLSearchParams(location.search);
+    const id = params.get('id');
+    const pavilion = params.get('pavilion');
+    const from = params.get('from');
+    const name = nameMap[id] || "不明な方";
 
-      document.getElementById("message").textContent = `${name}さん、${pavilion}パビリオンへのにゅうじょうをかくにんしました。`;
-      document.getElementById("image").src = `images/entries/${id}.png`;
+    document.getElementById("message").textContent = `${name}さん、${pavilion}パビリオンへのにゅうじょうをかくにんしました。`;
+    document.getElementById("image").src = `images/entries/${id}.png`;
 
-      const pageNum = from.match(/scanner(\d)/)?.[1] || '1';
-      const audio = new Audio(`sounds/scanner${pageNum}.mp3`);
-      audio.play();
+    const pageNum = from.match(/scanner(\\d)/)?.[1] || '1';
+    audio = new Audio(`sounds/scanner${pageNum}.mp3`);
+    audio.play().then(() => {
+      console.log(\"音声再生OK\");
+    }).catch((error) => {
+      console.log(\"音声再生エラー\", error);
+    });
 
-      setTimeout(() => {
-        location.href = from;
-      }, 5000);
-    };
-  </script>
+    setTimeout(() => {
+      location.href = from;
+    }, 5000);
+  };
+</script>
 </head>
 <body>
   <h1 id="message">確認中…</h1>
