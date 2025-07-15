@@ -11,6 +11,8 @@
     #reader { width: 300px; display: none; }
     img { height: 100px; }
     #result { margin-top: 20px; font-size: 1.2em; }
+    #entryWrapper { display: flex; flex-direction: column; align-items: center; justify-content: center; margin-top: 20px; }
+    #entryImage { height: 200px; display: none; margin: 0 auto; }
   </style>
 </head>
 <body>
@@ -23,8 +25,10 @@
     <img src="images/flags/spain.png" alt="スペイン国旗">
   </div>
 
-  <div id="result"></div>
-  <img id="entryImage" src="" alt="" style="height:200px; display:none;">
+  <div id="entryWrapper">
+    <div id="result"></div>
+    <img id="entryImage" src="" alt="">
+  </div>
 
   <script>
     let qrScanner;
