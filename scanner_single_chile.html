@@ -63,14 +63,14 @@
       document.getElementById("entryImage").style.display = "block";
 
       entryAudio.play().catch(err => console.log("読み取り後 音再生エラー", err));
-
+ </center>
       setTimeout(() => {
         document.getElementById("result").textContent = "";
         document.getElementById("entryImage").style.display = "none";
         qrScanner.resume();
       }, 5000);
     }
-  </center>
+ 
   </script>
 </body>
 </html>
